@@ -45,9 +45,21 @@ declare_tool_lint! {
 
 declare_lint_pass!(ImplEqForFloat => [IMPL_EQ_FOR_FLOAT]);
 
-fn emit_eq_for_float_err<'tcx>(ctx: &LateContext<'tcx>, impl_span: Span, fields: Vec<(Ident, Ty)>) {
+fn emit_eq_for_float_err<'tcx>(
+    ctx: &LateContext<'tcx>,
+    impl_span: Span,
+    maybe_ty_def_ident: Option<Ident>,
+    fields: Vec<(Ident, Ty)>,
+) {
     ctx.struct_span_lint(IMPL_EQ_FOR_FLOAT, impl_span, |diag| {
         let mut diag = diag.build("`Eq` should not be implemented for types containing floats");
+
+        if let Some(ty_def_ident) = maybe_ty_def_ident {
+            diag.span_label(
+                ty_def_ident.span,
+                format!("`{}` defined here", ty_def_ident),
+            );
+        }
 
         for (ident, ty) in fields {
             let extra_info = match ty.kind() {
@@ -126,7 +138,12 @@ impl<'tcx> LateLintPass<'tcx> for ImplEqForFloat {
                 }
 
                 if !float_fields.is_empty() {
-                    emit_eq_for_float_err(ctx, item.span, float_fields);
+                    emit_eq_for_float_err(
+                        ctx,
+                        item.span,
+                        ctx.tcx.opt_item_name(adt.did),
+                        float_fields
+                    );
                 }
             }
         }

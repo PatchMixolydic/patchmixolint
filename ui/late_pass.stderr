@@ -1,6 +1,8 @@
 error: `Eq` should not be implemented for types containing floats
   --> $DIR/late_pass.rs:12:1
    |
+LL | struct MyFloat {
+   |        ------- `MyFloat` defined here
 LL |     x: f32,
    |     - `x` is of type `f32`
 LL |     y: f64,
@@ -16,6 +18,8 @@ LL | impl Eq for MyFloat {}
 error: `Eq` should not be implemented for types containing floats
   --> $DIR/late_pass.rs:20:1
    |
+LL | enum MyFloatEnum {
+   |      ----------- `MyFloatEnum` defined here
 LL |     X(f32),
    |       --- `0` is of type `f32`
 LL |     Y(MyFloat),
