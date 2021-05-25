@@ -1,24 +1,31 @@
-# Template Dylint library
+# Patchmixolint
 
-[Dylint](https://github.com/trailofbits/dylint) is a tool for running Rust lints from dynamic libraries. This repository is a "blank slate" Dylint library.
+A personal set of lints for the [Dylint](https://github.com/trailofbits/dylint)
+utility. These are incredibly opinionated and will probably produce warnings
+that you don't care about (ex. linting on a missing lint level declaration for
+`meta_variable_misuse` in a crate that will never use macros).
 
-You can fork this repository and edit it directly, or you can try the experimental `start_from_clippy_lint.sh` script described below.
+The code for the lints themselves might not be that great. Please tread with
+caution!
 
-**Experimental**
+## Setting Patchmixolint lint levels
+You can modify Patchmixolint's lint levels in about the way you'd expect.
 
-Choose a [Clippy lint](https://rust-lang.github.io/rust-clippy/master/) and run the following two commands:
+* You can specify them in `DYLINT_RUSTFLAGS`:
+  ```
+  $ DYLINT_RUSTFLAGS="-Apatchmixolint::missing_lints" cargo dylint $TARGET_DIR/libpatchmixolint@nightly-m68k-unknown-genesis.so
+  ```
+* You can declare them in `main.rs`/`lib.rs`. Since Patchmixolint registers its
+  lints as tool lints, you must use `#![feature(register_tool)]` for this to
+  work. This shouldn't affect normal operation.
+  ```rust
+  #![allow(patchmixolint::macro_rules_over_macro)] // << lint level changed
+  #![feature(decl_macro)]
+  #![feature(register_tool)] // << register_tool feature must be enabled
+  #![register_tool(patchmixolint)] // << register `patchmixolint`
 
-```sh
-./start_from_clippy_lint.sh CLIPPY_LINT_NAME
-cargo build
-```
+  macro_rules! dont_change_me {
+      () => {};
+  }
+  ```
 
-If the first command fails: sorry. Perhaps try another Clippy lint.
-
-If the first command succeeds, but the second fails: you are probably halfway to having a functional Dylint library.
-
-If both commands succeed: hooray! You might then try the following:
-
-```sh
-cargo dylint CLIPPY_LINT_NAME -- --manifest-path=PATH_TO_OTHER_PACKAGES_MANIFEST
-```

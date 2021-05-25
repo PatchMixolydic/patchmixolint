@@ -5,7 +5,8 @@ name = "patchmixolint"
 version = "0.1.0"
 authors = ["Ruby Lazuli"]
 description = "Set of personal lints"
-edition = "2018"
+license = "MIT"
+edition = "2018" # FIXME: set to 2021 once rust-lang/rustfmt#4847 is merged
 publish = false
 
 [lib]
