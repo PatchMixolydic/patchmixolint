@@ -27,11 +27,11 @@ extern crate rustc_target;
 extern crate rustc_trait_selection;
 extern crate rustc_typeck;
 
+mod impl_eq_for_float;
 mod macro_rules_over_macro;
 mod missing_lints;
 mod terse_lifetime_name;
 mod utils;
-mod impl_eq_for_float;
 
 #[no_mangle]
 pub fn register_lints(_sess: &rustc_session::Session, lint_store: &mut rustc_lint::LintStore) {

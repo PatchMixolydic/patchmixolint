@@ -1,11 +1,10 @@
-use std::borrow::Cow;
-
 use clippy_utils::diagnostics::span_lint_and_help;
 use rustc_ast::ast;
 use rustc_lint::{EarlyContext, EarlyLintPass};
 use rustc_lint_defs::declare_tool_lint;
 use rustc_session::declare_lint_pass;
 use rustc_span::{sym, Symbol};
+use std::borrow::Cow;
 
 use crate::utils::{lint_level_declared, lint_level_declared_as};
 
@@ -15,8 +14,8 @@ declare_tool_lint! {
     /// **Why is this bad?** Several useful lints are allowed by default,
     /// such as `meta_variable_misuse` and `unsafe_op_in_unsafe_fn`.
     ///
-    /// **Known problems:** This lint can be incredibly noisy and suggest
-    /// setting lint levels which are irrelevant to your crate.
+    /// **Known problems:** This lint can be incredibly noisy and might
+    /// suggest setting lint levels which are irrelevant to your crate.
     ///
     /// **Example:**
     /// ```rust
@@ -75,7 +74,11 @@ impl EarlyLintPass for MissingLints {
     fn check_crate(&mut self, ctx: &EarlyContext<'_>, krate: &ast::Crate) {
         lint_on_undeclared_level(ctx, krate, "meta_variable_misuse", "warn");
 
-        if !lint_level_declared_as(krate, Symbol::intern("unsafe_code"), &[sym::deny, sym::forbid]) {
+        if !lint_level_declared_as(
+            krate,
+            Symbol::intern("unsafe_code"),
+            &[sym::deny, sym::forbid],
+        ) {
             lint_on_undeclared_level(ctx, krate, "unsafe_op_in_unsafe_fn", "forbid");
         }
 

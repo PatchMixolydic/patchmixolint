@@ -35,15 +35,15 @@ declare_tool_lint! {
 declare_lint_pass!(TerseLifetimeName => [TERSE_LIFETIME_NAME]);
 
 impl EarlyLintPass for TerseLifetimeName {
-    fn check_generic_param(&mut self, cx: &EarlyContext, param: &GenericParam) {
-        if in_external_macro(cx.sess, param.ident.span) {
+    fn check_generic_param(&mut self, ctx: &EarlyContext, param: &GenericParam) {
+        if in_external_macro(ctx.sess, param.ident.span) {
             return;
         }
 
         if let GenericParamKind::Lifetime = param.kind {
             if !param.is_placeholder && param.ident.as_str().len() <= 2 {
                 span_lint_and_help(
-                    cx,
+                    ctx,
                     TERSE_LIFETIME_NAME,
                     param.ident.span,
                     "single-character lifetime names are likely uninformative",

@@ -1,0 +1,7 @@
+error: missing lint level for `meta_variable_misuse`
+   |
+   = note: `-D patchmixolint::missing-lints` implied by `-D warnings`
+   = help: declare the lint level explicitly: `#![warn(meta_variable_misuse)]`
+
+error: aborting due to previous error
+
