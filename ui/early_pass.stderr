@@ -1,0 +1,68 @@
+error: missing lint level for `meta_variable_misuse`
+  --> $DIR/early_pass.rs:1:1
+   |
+LL | / #![allow(unused)]
+LL | | #![feature(decl_macro)]
+   | |_
+   |
+   = note: `-D patchmixolint::missing-lints` implied by `-D warnings`
+   = help: declare the lint level explicitly: `#![warn(meta_variable_misuse)]`
+
+error: missing lint level for `unsafe_op_in_unsafe_fn`
+  --> $DIR/early_pass.rs:1:1
+   |
+LL | / #![allow(unused)]
+LL | | #![feature(decl_macro)]
+   | |_
+   |
+   = help: declare the lint level explicitly: `#![forbid(unsafe_op_in_unsafe_fn)]`
+
+error: missing lint level for `unused_imports`
+  --> $DIR/early_pass.rs:1:1
+   |
+LL | / #![allow(unused)]
+LL | | #![feature(decl_macro)]
+   | |_
+   |
+   = help: declare the lint level explicitly: `#![warn(unused_imports)]`
+
+error: missing lint level for `unused_must_use`
+  --> $DIR/early_pass.rs:1:1
+   |
+LL | / #![allow(unused)]
+LL | | #![feature(decl_macro)]
+   | |_
+   |
+   = help: declare the lint level explicitly: `#![warn(unused_must_use)]`
+
+error: `macro_rules!` was used, but the `decl_macro` feature is enabled
+  --> $DIR/early_pass.rs:4:18
+   |
+LL |   macro_rules! foo {
+   |  __________________^
+LL | |     () => {};
+LL | | }
+   | |_^
+   |
+   = note: `-D patchmixolint::macro-rules-over-macro` implied by `-D warnings`
+   = help: use `macro` instead
+
+error: single-character lifetime names are likely uninformative
+  --> $DIR/early_pass.rs:8:12
+   |
+LL | struct Foo<'a>(std::marker::PhantomData<&'a ()>);
+   |            ^^
+   |
+   = note: `-D patchmixolint::terse-lifetime-name` implied by `-D warnings`
+   = help: use a more informative name
+
+error: single-character lifetime names are likely uninformative
+  --> $DIR/early_pass.rs:10:6
+   |
+LL | impl<'a> Foo<'a> {}
+   |      ^^
+   |
+   = help: use a more informative name
+
+error: aborting due to 7 previous errors
+

@@ -1,0 +1,31 @@
+error: `Eq` should not be implemented for types containing floats
+  --> $DIR/late_pass.rs:12:1
+   |
+LL |     x: f32,
+   |     - `x` is of type `f32`
+LL |     y: f64,
+   |     - `y` is of type `f64`
+...
+LL | impl Eq for MyFloat {}
+   | ^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[deny(patchmixolint::impl_eq_for_float)]` on by default
+   = note: floats do not implement `Eq` since `NaN` is not equal to itself
+   = help: consider using a crate such as `noisy_float` or `decorum`
+
+error: `Eq` should not be implemented for types containing floats
+  --> $DIR/late_pass.rs:20:1
+   |
+LL |     X(f32),
+   |       --- `0` is of type `f32`
+LL |     Y(MyFloat),
+   |       ------- `0` is of type struct `MyFloat`, which contains a float
+...
+LL | impl Eq for MyFloatEnum {}
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: floats do not implement `Eq` since `NaN` is not equal to itself
+   = help: consider using a crate such as `noisy_float` or `decorum`
+
+error: aborting due to 2 previous errors
+

@@ -1,0 +1,23 @@
+cargo-features = ["edition2021"]
+
+[package]
+name = "patchmixolint"
+version = "0.1.0"
+authors = ["Ruby Lazuli"]
+description = "Set of personal lints"
+edition = "2018"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+clippy_utils = { git = "https://github.com/rust-lang/rust-clippy", rev = "ae0d4da764fd751494fb270fd04c2c686eac1302"}
+dylint_linting = "0.1.0"
+if_chain = "1.0.1"
+
+[dev-dependencies]
+dylint_testing = "0.1.0"
+
+[package.metadata.rust-analyzer]
+rustc_private = true
