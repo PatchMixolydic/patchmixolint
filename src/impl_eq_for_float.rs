@@ -11,15 +11,16 @@ use rustc_span::{sym, symbol::Ident, Span};
 
 declare_tool_lint! {
     /// **What it does:** Checks for implementations of `Eq` on types
-    /// that contain a float or a type that contains a float.
+    /// that contain floats or other types that contain floats.
     ///
     /// **Why is this bad?** `f32` and `f64` do not implement `Eq` on
     /// purpose because `NaN != NaN`.
     ///
     /// **Known problems:** This lint does not check types that come
     /// from other crates to avoid linting types such as `noisy_float`'s
-    /// `R32`. This lint may trip for safe implementations of `Eq`
-    /// (eg. manual implementations of `noisy_float`'s types).
+    /// `R32`. This lint may trip for types with safe implementations of `Eq`
+    /// (eg. manual implementations of `noisy_float`'s types) and for
+    /// implementations of `Eq` on types that contain such types.
     ///
     /// **Example:**
     /// ```rust
