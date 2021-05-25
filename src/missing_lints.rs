@@ -1,3 +1,5 @@
+use std::borrow::Cow;
+
 use clippy_utils::diagnostics::span_lint_and_help;
 use rustc_ast::ast;
 use rustc_lint::{EarlyContext, EarlyLintPass};
@@ -13,7 +15,8 @@ declare_tool_lint! {
     /// **Why is this bad?** Several useful lints are allowed by default,
     /// such as `meta_variable_misuse` and `unsafe_op_in_unsafe_fn`.
     ///
-    /// **Known problems:** None.
+    /// **Known problems:** This lint can be incredibly noisy and suggest
+    /// setting lint levels which are irrelevant to your crate.
     ///
     /// **Example:**
     /// ```rust
@@ -37,7 +40,7 @@ declare_tool_lint! {
 declare_lint_pass!(MissingLints => [MISSING_LINTS]);
 
 fn lint_on_undeclared_level(
-    cx: &EarlyContext<'_>,
+    ctx: &EarlyContext<'_>,
     krate: &ast::Crate,
     name: &str,
     suggest_level: &str,
@@ -48,11 +51,17 @@ fn lint_on_undeclared_level(
             .shrink_to_lo()
             .until(krate.attrs.last().map(|attr| attr.span).unwrap_or_default());
 
+        let location = if let Some(crate_name) = &ctx.sess.opts.crate_name {
+            Cow::Owned(format!(" in crate `{}`", crate_name))
+        } else {
+            Cow::Borrowed("")
+        };
+
         span_lint_and_help(
-            cx,
+            ctx,
             MISSING_LINTS,
             span,
-            &format!("missing lint level for `{}`", name),
+            &format!("missing lint level for `{}`{}", name, location),
             None,
             &format!(
                 "declare the lint level explicitly: `#![{}({})]`",
@@ -63,16 +72,16 @@ fn lint_on_undeclared_level(
 }
 
 impl EarlyLintPass for MissingLints {
-    fn check_crate(&mut self, cx: &EarlyContext<'_>, krate: &ast::Crate) {
-        lint_on_undeclared_level(cx, krate, "meta_variable_misuse", "warn");
+    fn check_crate(&mut self, ctx: &EarlyContext<'_>, krate: &ast::Crate) {
+        lint_on_undeclared_level(ctx, krate, "meta_variable_misuse", "warn");
 
         if !lint_level_declared_as(krate, Symbol::intern("unsafe_code"), &[sym::deny, sym::forbid]) {
-            lint_on_undeclared_level(cx, krate, "unsafe_op_in_unsafe_fn", "forbid");
+            lint_on_undeclared_level(ctx, krate, "unsafe_op_in_unsafe_fn", "forbid");
         }
 
         if lint_level_declared_as(krate, Symbol::intern("unused"), &[sym::allow]) {
-            lint_on_undeclared_level(cx, krate, "unused_imports", "warn");
-            lint_on_undeclared_level(cx, krate, "unused_must_use", "warn");
+            lint_on_undeclared_level(ctx, krate, "unused_imports", "warn");
+            lint_on_undeclared_level(ctx, krate, "unused_must_use", "warn");
         }
     }
 }
