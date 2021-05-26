@@ -19,4 +19,9 @@ enum MyFloatEnum {
 
 impl Eq for MyFloatEnum {}
 
+#[derive(PartialEq)]
+struct GenericStruct<T>(T);
+
+impl Eq for GenericStruct<f32> {}
+
 fn main() {}

@@ -57,6 +57,10 @@ fn emit_eq_for_float_err<'tcx>(
 
         if let Some(ty_def_ident) = maybe_ty_def_ident {
             diag.span_label(
+                impl_span,
+                format!("`{}` should not impl `Eq`", ty_def_ident),
+            )
+            .span_label(
                 ty_def_ident.span,
                 format!("`{}` defined here", ty_def_ident),
             );
@@ -74,7 +78,7 @@ fn emit_eq_for_float_err<'tcx>(
                     "`{}` is of type {}{}",
                     ident,
                     ty.sort_string(ctx.tcx),
-                    extra_info
+                    extra_info,
                 ),
             );
         }
