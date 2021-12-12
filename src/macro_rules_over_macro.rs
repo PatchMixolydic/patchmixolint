@@ -1,7 +1,6 @@
-use clippy_utils::diagnostics::span_lint_and_sugg;
 use rustc_ast::ast;
 use rustc_errors::Applicability;
-use rustc_lint::{EarlyContext, EarlyLintPass};
+use rustc_lint::{EarlyContext, EarlyLintPass, LintContext};
 use rustc_lint_defs::declare_tool_lint;
 use rustc_middle::lint::in_external_macro;
 use rustc_session::declare_lint_pass;
@@ -63,15 +62,16 @@ impl EarlyLintPass for MacroRulesOverMacro {
 
         let macro_rules_span = item.span.shrink_to_lo().until(item.ident.span);
 
-        span_lint_and_sugg(
-            ctx,
-            MACRO_RULES_OVER_MACRO,
-            macro_rules_span,
-            "`macro_rules!` was used, but the `decl_macro` feature is enabled",
-            "use",
-            "macro ".into(),
-            // might cause hygiene issues
-            Applicability::MaybeIncorrect,
-        );
+        ctx.struct_span_lint(MACRO_RULES_OVER_MACRO, macro_rules_span, |diag| {
+            diag.build("`macro_rules!` was used, but the `decl_macro` feature is enabled")
+                .span_suggestion_short(
+                    macro_rules_span,
+                    "use `macro` instead",
+                    "macro ".to_string(),
+                    // might cause hygiene issues
+                    Applicability::MaybeIncorrect,
+                )
+                .emit();
+        });
     }
 }

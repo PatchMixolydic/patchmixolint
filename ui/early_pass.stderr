@@ -68,7 +68,7 @@ error: `macro_rules!` was used, but the `decl_macro` feature is enabled
   --> $DIR/early_pass.rs:5:1
    |
 LL | macro_rules! foo {
-   | ^^^^^^^^^^^^^ help: use: `macro`
+   | ^^^^^^^^^^^^^ help: use `macro` instead
    |
    = note: `-D patchmixolint::macro-rules-over-macro` implied by `-D warnings`
 

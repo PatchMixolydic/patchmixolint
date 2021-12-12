@@ -1,4 +1,4 @@
-// #![deny(unsafe_code)]
+#![deny(unsafe_code)]
 #![feature(decl_macro, rustc_private)]
 #![warn(meta_variable_misuse)]
 
