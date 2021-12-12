@@ -1,6 +1,5 @@
-#![feature(rustc_private)]
-#![feature(decl_macro)]
-#![forbid(unsafe_op_in_unsafe_fn)]
+#![deny(unsafe_code)]
+#![feature(decl_macro, rustc_private)]
 #![warn(meta_variable_misuse)]
 
 dylint_linting::dylint_library!();
@@ -32,6 +31,8 @@ mod missing_lints;
 mod terse_lifetime_name;
 mod utils;
 
+// Use of `no_mangle` is required for Dylint to find this function.
+#[allow(unsafe_code)]
 #[no_mangle]
 pub fn register_lints(_sess: &rustc_session::Session, lint_store: &mut rustc_lint::LintStore) {
     lint_store.register_lints(&[
