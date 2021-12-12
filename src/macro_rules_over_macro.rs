@@ -17,8 +17,7 @@ declare_tool_lint! {
     ///
     /// **Example:**
     /// ```rust
-    /// #![feature(decl_macro)]
-    /// #![feature(never_type)]
+    /// #![feature(decl_macro, never_type)]
     ///
     /// macro_rules! foo {
     ///     (become unsafe) => {
@@ -28,8 +27,7 @@ declare_tool_lint! {
     /// ```
     /// Instead, use:
     /// ```rust
-    /// #![feature(decl_macro)]
-    /// #![feature(never_type)]
+    /// #![feature(decl_macro, never_type)]
     ///
     /// macro foo(become unsafe) {
     ///     *(1 as *const !)

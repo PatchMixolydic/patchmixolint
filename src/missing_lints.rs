@@ -25,8 +25,7 @@ declare_tool_lint! {
     /// ```
     /// Instead, use:
     /// ```rust
-    /// #![forbid(macro_use_extern_crate)]
-    /// #![forbid(unsafe_op_in_unsafe_fn)]
+    /// #![forbid(macro_use_extern_crate, unsafe_op_in_unsafe_fn)]
     /// #![warn(meta_variable_misuse)]
     ///
     /// fn main() {}
