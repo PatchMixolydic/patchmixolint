@@ -8,7 +8,7 @@ that you don't care about (ex. linting on a missing lint level declaration for
 The code for the lints themselves might not be that great. Please tread with
 caution!
 
-**Currently supports** `rustc 1.59.0-nightly (0b6f079e4 2021-12-07)`.
+**Currently targets** `rustc 1.59.0-nightly (0b6f079e4 2021-12-07)`.
 
 ## Setting Patchmixolint lint levels
 You can modify Patchmixolint's lint levels in about the way you'd expect.
