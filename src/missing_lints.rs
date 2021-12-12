@@ -1,9 +1,9 @@
-use clippy_utils::diagnostics::span_lint_and_help;
 use rustc_ast::ast;
-use rustc_lint::{EarlyContext, EarlyLintPass};
+use rustc_errors::Applicability;
+use rustc_lint::{EarlyContext, EarlyLintPass, LintContext};
 use rustc_lint_defs::declare_tool_lint;
 use rustc_session::declare_lint_pass;
-use rustc_span::{sym, Symbol};
+use rustc_span::{sym, Span, Symbol};
 use std::borrow::Cow;
 
 use crate::utils::{lint_level_declared, lint_level_declared_as, tool_lint_level_declared};
@@ -38,17 +38,39 @@ declare_tool_lint! {
 
 declare_lint_pass!(MissingLints => [MISSING_LINTS]);
 
+fn span_lint_and_suggest_appending(
+    ctx: &EarlyContext<'_>,
+    span: Span,
+    suggest_level: &str,
+    name: &str,
+    location: Cow<'static, str>,
+) {
+    ctx.struct_span_lint(MISSING_LINTS, span, |diag| {
+        diag.build(&format!("missing lint level for `{}`{}", name, location))
+            .span_suggestion_verbose(
+                span.shrink_to_hi(),
+                "declare the lint level explicitly",
+                format!("\n#![{}({})]", suggest_level, name),
+                // actual solution might be to stop allowing `unused`, deny
+                // `unsafe_code`, etc.
+                Applicability::MaybeIncorrect,
+            )
+            .emit();
+    });
+}
+
 fn lint_on_undeclared_level(
     ctx: &EarlyContext<'_>,
     krate: &ast::Crate,
-    name: &str,
+    lint_name: &str,
     suggest_level: &str,
 ) {
-    if !lint_level_declared(krate, Symbol::intern(name)) {
+    if !lint_level_declared(krate, Symbol::intern(lint_name)) {
+        // Get the span of all inner attributes in the crate root
         let span = krate
-            .span
-            .shrink_to_lo()
-            .until(krate.attrs.last().map(|attr| attr.span).unwrap_or_default());
+            .attrs
+            .iter()
+            .fold(krate.span.shrink_to_lo(), |span_acc, attr| span_acc.to(attr.span));
 
         let location = if let Some(crate_name) = &ctx.sess.opts.crate_name {
             Cow::Owned(format!(" in crate `{}`", crate_name))
@@ -56,17 +78,7 @@ fn lint_on_undeclared_level(
             Cow::Borrowed("")
         };
 
-        span_lint_and_help(
-            ctx,
-            MISSING_LINTS,
-            span,
-            &format!("missing lint level for `{}`{}", name, location),
-            None,
-            &format!(
-                "declare the lint level explicitly: `#![{}({})]`",
-                suggest_level, name
-            ),
-        );
+        span_lint_and_suggest_appending(ctx, span, suggest_level, lint_name, location);
     }
 }
 
@@ -74,14 +86,15 @@ fn lint_on_undeclared_tool_level(
     ctx: &EarlyContext<'_>,
     krate: &ast::Crate,
     tool: Symbol,
-    name: &str,
+    lint_name: &str,
     suggest_level: &str,
 ) {
-    if !tool_lint_level_declared(krate, tool, Symbol::intern(name)) {
+    if !tool_lint_level_declared(krate, tool, Symbol::intern(lint_name)) {
+        // Get the span of all inner attributes in the crate root
         let span = krate
-            .span
-            .shrink_to_lo()
-            .until(krate.attrs.last().map(|attr| attr.span).unwrap_or_default());
+            .attrs
+            .iter()
+            .fold(krate.span.shrink_to_lo(), |span_acc, attr| span_acc.to(attr.span));
 
         let location = if let Some(crate_name) = &ctx.sess.opts.crate_name {
             Cow::Owned(format!(" in crate `{}`", crate_name))
@@ -89,16 +102,12 @@ fn lint_on_undeclared_tool_level(
             Cow::Borrowed("")
         };
 
-        span_lint_and_help(
+        span_lint_and_suggest_appending(
             ctx,
-            MISSING_LINTS,
             span,
-            &format!("missing lint level for `{}::{}`{}", tool, name, location),
-            None,
-            &format!(
-                "declare the lint level explicitly: `#![{}({}::{})]`",
-                suggest_level, tool, name
-            ),
+            suggest_level,
+            &format!("{}::{}", tool, lint_name),
+            location,
         );
     }
 }

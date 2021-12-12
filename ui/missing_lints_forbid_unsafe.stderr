@@ -1,7 +1,15 @@
 error: missing lint level for `meta_variable_misuse`
+  --> $DIR/missing_lints_forbid_unsafe.rs:1:1
+   |
+LL | #![forbid(unsafe_code)]
+   | ^^^^^^^^^^^^^^^^^^^^^^^
    |
    = note: `-D patchmixolint::missing-lints` implied by `-D warnings`
-   = help: declare the lint level explicitly: `#![warn(meta_variable_misuse)]`
+help: declare the lint level explicitly
+   |
+LL ~ #![forbid(unsafe_code)]
+LL + #![warn(meta_variable_misuse)]
+   |
 
 error: aborting due to previous error
 

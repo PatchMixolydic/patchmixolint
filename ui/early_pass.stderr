@@ -3,46 +3,66 @@ error: missing lint level for `meta_variable_misuse`
    |
 LL | / #![allow(unused)]
 LL | | #![feature(decl_macro)]
-   | |_
+   | |_______________________^
    |
    = note: `-D patchmixolint::missing-lints` implied by `-D warnings`
-   = help: declare the lint level explicitly: `#![warn(meta_variable_misuse)]`
+help: declare the lint level explicitly
+   |
+LL ~ #![feature(decl_macro)]
+LL + #![warn(meta_variable_misuse)]
+   |
 
 error: missing lint level for `unsafe_op_in_unsafe_fn`
   --> $DIR/early_pass.rs:1:1
    |
 LL | / #![allow(unused)]
 LL | | #![feature(decl_macro)]
-   | |_
+   | |_______________________^
    |
-   = help: declare the lint level explicitly: `#![forbid(unsafe_op_in_unsafe_fn)]`
+help: declare the lint level explicitly
+   |
+LL ~ #![feature(decl_macro)]
+LL + #![forbid(unsafe_op_in_unsafe_fn)]
+   |
 
 error: missing lint level for `clippy::undocumented_unsafe_blocks`
   --> $DIR/early_pass.rs:1:1
    |
 LL | / #![allow(unused)]
 LL | | #![feature(decl_macro)]
-   | |_
+   | |_______________________^
    |
-   = help: declare the lint level explicitly: `#![forbid(clippy::undocumented_unsafe_blocks)]`
+help: declare the lint level explicitly
+   |
+LL ~ #![feature(decl_macro)]
+LL + #![forbid(clippy::undocumented_unsafe_blocks)]
+   |
 
 error: missing lint level for `unused_imports`
   --> $DIR/early_pass.rs:1:1
    |
 LL | / #![allow(unused)]
 LL | | #![feature(decl_macro)]
-   | |_
+   | |_______________________^
    |
-   = help: declare the lint level explicitly: `#![warn(unused_imports)]`
+help: declare the lint level explicitly
+   |
+LL ~ #![feature(decl_macro)]
+LL + #![warn(unused_imports)]
+   |
 
 error: missing lint level for `unused_must_use`
   --> $DIR/early_pass.rs:1:1
    |
 LL | / #![allow(unused)]
 LL | | #![feature(decl_macro)]
-   | |_
+   | |_______________________^
    |
-   = help: declare the lint level explicitly: `#![warn(unused_must_use)]`
+help: declare the lint level explicitly
+   |
+LL ~ #![feature(decl_macro)]
+LL + #![warn(unused_must_use)]
+   |
 
 error: `macro_rules!` was used, but the `decl_macro` feature is enabled
   --> $DIR/early_pass.rs:5:1

@@ -31,17 +31,17 @@ pub fn lint_level_declared_as(krate: &ast::Crate, lint: Symbol, levels: &[Symbol
     })
 }
 
-/// Check if a lint level is explicitly defined in the given crate's
+/// Check if a tool lint level is explicitly defined in the given crate's
 /// top level attributes.
 pub fn tool_lint_level_declared(krate: &ast::Crate, tool: Symbol, lint: Symbol) -> bool {
     tool_lint_level_declared_as(krate, tool, lint, &[sym::allow, sym::warn, sym::deny, sym::forbid])
 }
 
-/// Check if a lint level is explicitly defined with one of the symbols in
+/// Check if a tool lint level is explicitly defined with one of the symbols in
 /// `levels` in the given crate's top level attributes.
 ///
-/// Note that passing the name of a non-lint-level attribute (like [`sym::feature`])
-/// might cause false positives.
+/// Note that passing the name of a non-lint-level attribute in `levels`
+/// (like [`sym::feature`]) might cause false positives.
 pub fn tool_lint_level_declared_as(
     krate: &ast::Crate,
     target_tool: Symbol,
