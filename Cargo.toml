@@ -1,24 +1,22 @@
-cargo-features = ["edition2021"]
-
 [package]
 name = "patchmixolint"
 version = "0.1.0"
 authors = ["Ruby Lazuli"]
 description = "Set of personal lints"
 license = "MIT"
-edition = "2018" # FIXME: set to 2021 once rust-lang/rustfmt#4847 is merged
+edition = "2021"
 publish = false
 
 [lib]
 crate-type = ["cdylib"]
 
 [dependencies]
-clippy_utils = { git = "https://github.com/rust-lang/rust-clippy", rev = "ae0d4da764fd751494fb270fd04c2c686eac1302"}
-dylint_linting = "0.1.0"
-if_chain = "1.0.1"
+clippy_utils = { git = "https://github.com/rust-lang/rust-clippy", rev = "86cea734494db2e8417c81905d8f371c241c793c"}
+dylint_linting = "1.0.7"
+if_chain = "1.0.2"
 
 [dev-dependencies]
-dylint_testing = "0.1.0"
+dylint_testing = "1.0.7"
 
 [package.metadata.rust-analyzer]
 rustc_private = true

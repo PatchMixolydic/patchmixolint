@@ -18,14 +18,14 @@ You can modify Patchmixolint's lint levels in about the way you'd expect.
 * You can declare them in `main.rs`/`lib.rs`. Since Patchmixolint registers its
   lints as tool lints, you must use `#![feature(register_tool)]` for this to
   work. This shouldn't affect normal operation.
-  ```rust
-  #![allow(patchmixolint::macro_rules_over_macro)] // << lint level changed
-  #![feature(decl_macro)]
-  #![feature(register_tool)] // << register_tool feature must be enabled
-  #![register_tool(patchmixolint)] // << register `patchmixolint`
+```rust
+#![allow(patchmixolint::macro_rules_over_macro)] // << lint level changed
+#![feature(decl_macro)]
+#![feature(register_tool)] // << register_tool feature must be enabled
+#![register_tool(patchmixolint)] // << register `patchmixolint`
 
-  macro_rules! dont_change_me {
-      () => {};
-  }
-  ```
+macro_rules! dont_change_me {
+  () => {};
+}
+```
 
