@@ -1,6 +1,7 @@
 #![allow(unused)]
 #![feature(decl_macro)]
 
+#[allow(unused_macros)]
 macro_rules! foo {
     () => {};
 }

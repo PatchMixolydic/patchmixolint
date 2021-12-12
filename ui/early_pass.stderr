@@ -36,19 +36,15 @@ LL | | #![feature(decl_macro)]
    = help: declare the lint level explicitly: `#![warn(unused_must_use)]`
 
 error: `macro_rules!` was used, but the `decl_macro` feature is enabled
-  --> $DIR/early_pass.rs:4:18
+  --> $DIR/early_pass.rs:5:1
    |
-LL |   macro_rules! foo {
-   |  __________________^
-LL | |     () => {};
-LL | | }
-   | |_^
+LL | macro_rules! foo {
+   | ^^^^^^^^^^^^^ help: use: `macro`
    |
    = note: `-D patchmixolint::macro-rules-over-macro` implied by `-D warnings`
-   = help: use `macro` instead
 
 error: single-character lifetime names are likely uninformative
-  --> $DIR/early_pass.rs:8:12
+  --> $DIR/early_pass.rs:9:12
    |
 LL | struct Foo<'a>(std::marker::PhantomData<&'a ()>);
    |            ^^
@@ -57,7 +53,7 @@ LL | struct Foo<'a>(std::marker::PhantomData<&'a ()>);
    = help: use a more informative name
 
 error: single-character lifetime names are likely uninformative
-  --> $DIR/early_pass.rs:10:6
+  --> $DIR/early_pass.rs:11:6
    |
 LL | impl<'a> Foo<'a> {}
    |      ^^
